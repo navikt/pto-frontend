@@ -34,11 +34,21 @@ export interface AppConfig {
 	redirects?: RedirectConfig[];
 }
 
+export const substituteEnvVariables = (key: string, value: any): any => {
+	if (typeof value !== "string") return value;
+	const valueWithCurlyBraces = value.match('{{(.*?)}}');
+	if (!valueWithCurlyBraces) return value;
+
+	const valueFromEnv = process.env[valueWithCurlyBraces[1]];
+	if (!valueFromEnv) return value;
+	return valueFromEnv;
+}
+
 export function createAppConfig(): AppConfig {
 	const environmentConfig = getEnvironmentConfig();
 
 	const jsonConfig = environmentConfig.jsonConfig
-		? JSON.parse(environmentConfig.jsonConfig)
+		? JSON.parse(environmentConfig.jsonConfig, substituteEnvVariables)
 		: readConfigFile(environmentConfig.jsonConfigFilePath || DEFAULT_JSON_CONFIG_FILE_PATH);
 
 	validateConfig(jsonConfig);

@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'fs';
-import { FallbackStrategy } from './app-config';
+import {FallbackStrategy, substituteEnvVariables} from './app-config';
 
 export interface JsonConfig {
 	port?: number;
@@ -36,7 +36,7 @@ export function readConfigFile(configFilePath: string): JsonConfig | undefined {
 
 	const configStr = readFileSync(configFilePath).toString();
 
-	return JSON.parse(configStr);
+	return JSON.parse(configStr, substituteEnvVariables);
 }
 
 export function validateConfig(config: JsonConfig | undefined) {

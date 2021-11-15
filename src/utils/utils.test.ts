@@ -1,4 +1,5 @@
 import { hoursToMs, hoursToSeconds, isRequestingFile, minutesToSeconds, removeQueryParams, stripPrefix } from './utils';
+import {createAppConfig, substituteEnvVariables} from "../config/app-config";
 
 describe('hoursToMs', () => {
 	it('should convert hours to milliseconds', () => {
@@ -48,4 +49,51 @@ describe('stripPrefix', () => {
 		expect(stripPrefix('/test/path', '/test')).toBe('/path');
 		expect(stripPrefix('/test/path', '/test1')).toBe('/test/path');
 	})
+});
+
+describe('substituteEnvVariables', () => {
+	it('should not substitute environment variables', () => {
+		let key = 'to';
+		let value = 'http://aktivitetsplan.nav.no/';
+		expect(substituteEnvVariables(key, value)).toBe('http://aktivitetsplan.nav.no/');
+	});
+	it('should not substitute environment variables when missing environment variable', () => {
+		let key = 'to';
+		let value = '{{AKTIVITETSPLAN_URL}}';
+		expect(substituteEnvVariables(key, value)).toBe('{{AKTIVITETSPLAN_URL}}');
+	});
+	it('should substitute environment variables', () => {
+		let key = 'to';
+		let value = '{{AKTIVITETSPLAN_URL}}';
+		process.env.AKTIVITETSPLAN_URL = 'test';
+		expect(substituteEnvVariables(key, value)).toBe('test');
+	});
+});
+
+describe('createAppConfig', () => {
+	it('create app config with substituions', () => {
+		process.env.JSON_CONFIG = '{' +
+			'"redirects": [' +
+			'              {' +
+			'                "from": "/api/auth",' +
+			'                "to": "/auth/info"' +
+			'              },' +
+			'              {' +
+			'                "from": "/aktivitetsplan",' +
+			'                "to": "{{AKTIVITETSPLAN_URL}}"' +
+			'              },' +
+			'              {' +
+			'                "from": "/dittnav",' +
+			'                "to": "{{DITTNAV_LINK_URL}}"' +
+			'              }' +
+			'	]' +
+			'}';
+		process.env.AKTIVITETSPLAN_URL = 'http://aktivitetsplan.nav.no/';
+		process.env.DITTNAV_LINK_URL = 'http://dittnav.nav.no/';
+		let appConfig = createAppConfig();
+		if (appConfig.redirects) {
+			expect(appConfig.redirects[1].to).toBe('http://aktivitetsplan.nav.no/');
+			expect(appConfig.redirects[2].to).toBe('http://dittnav.nav.no/');
+		}
+	});
 });
