@@ -2,6 +2,7 @@ import { getEnvironmentConfig } from './environment-config';
 import { ProxyConfig, readConfigFile, RedirectConfig, validateConfig } from './json-config';
 import { logger } from '../logger';
 import { isAbsolute, join } from 'path';
+import {parseJSONwithSubstitutions} from "../utils/json-utils";
 
 export enum FallbackStrategy {
 	REDIRECT = 'redirect',
@@ -34,21 +35,11 @@ export interface AppConfig {
 	redirects?: RedirectConfig[];
 }
 
-export const substituteEnvVariables = (key: string, value: any): any => {
-	if (typeof value !== "string") return value;
-	const valueWithCurlyBraces = value.match('{{(.*?)}}');
-	if (!valueWithCurlyBraces) return value;
-
-	const valueFromEnv = process.env[valueWithCurlyBraces[1]];
-	if (!valueFromEnv) return value;
-	return valueFromEnv;
-}
-
 export function createAppConfig(): AppConfig {
 	const environmentConfig = getEnvironmentConfig();
 
 	const jsonConfig = environmentConfig.jsonConfig
-		? JSON.parse(environmentConfig.jsonConfig, substituteEnvVariables)
+		? parseJSONwithSubstitutions(environmentConfig.jsonConfig)
 		: readConfigFile(environmentConfig.jsonConfigFilePath || DEFAULT_JSON_CONFIG_FILE_PATH);
 
 	validateConfig(jsonConfig);
