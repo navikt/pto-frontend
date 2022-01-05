@@ -2,7 +2,6 @@ import helmet from 'helmet';
 
 const ALLOWED_DOMAINS = ["*.nav.no", "*.adeo.no"];
 const GOOGLE_ANALYTICS_DOMAIN = "*.google-analytics.com";
-const TASK_ANALYTICS = "*.taskanalytics.com";
 const GOOGLE_TAG_MANAGER_DOMAIN = "*.googletagmanager.com";
 const ACCOUNT_PSPLUGIN_DOMAIN = "account.psplugin.com";
 const NAV_PSPLUGIN_DOMAIN = "nav.psplugin.com";
@@ -31,8 +30,7 @@ export function helmetMiddleware() {
 				objectSrc: ["'none'"],
 				scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"].concat(
 					ALLOWED_DOMAINS, GOOGLE_ANALYTICS_DOMAIN,
-					GOOGLE_TAG_MANAGER_DOMAIN, ACCOUNT_PSPLUGIN_DOMAIN, HOTJAR_DOMAIN,
-					TASK_ANALYTICS
+					GOOGLE_TAG_MANAGER_DOMAIN, ACCOUNT_PSPLUGIN_DOMAIN, HOTJAR_DOMAIN
 				),
 				scriptSrcAttr: ["'none'"],
 				styleSrc: ["'self'", "https:", "'unsafe-inline'"].concat(ALLOWED_DOMAINS),
