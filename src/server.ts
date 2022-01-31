@@ -51,7 +51,7 @@ async function startServer() {
 				logProvider: () => logger,
 				changeOrigin: true,
 				pathRewrite: proxy.preserveContextPath ? undefined : {
-					[`^${proxy.from}`]: ''
+					[`^${proxyFrom}`]: ''
 				}
 			}));
 		});
