@@ -66,7 +66,7 @@ async function startServer() {
 	});
 
 	if (appConfig.oidcClientId && appConfig.oidcDiscoveryUrl && appConfig.tokenCookieName) {
-		app.get('/auth/info', await authInfoRouter({
+		app.get(urlJoin(appConfig.contextPath, '/auth/info'), await authInfoRouter({
 			oidcClientId: appConfig.oidcClientId,
 			oidcDiscoveryUrl: appConfig.oidcDiscoveryUrl,
 			tokenCookieName: appConfig.tokenCookieName,
