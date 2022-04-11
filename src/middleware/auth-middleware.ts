@@ -54,7 +54,7 @@ export function createAuthConfig(config: AppConfig): AuthMiddlewareConfig {
 }
 
 function hasMinLevel(acr: string, level: number) {
-	return acr.endsWith('4') || level === 3 && acr.endsWith('3');
+	return acr === 'Level4' || level === 3 && acr === 'Level3';
 }
 
 export const authenticationWithLoginRedirect = async (config: AuthMiddlewareConfig) => {
