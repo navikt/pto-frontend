@@ -75,18 +75,23 @@ export function createKeyRetriever(jwksClient: jwksRsa.JwksClient) {
 	};
 }
 
-export const verifyJwtToken = (token: string | undefined, keyRetriever: GetPublicKeyOrSecret, verifyOptions: VerifyOptions): Promise<void> => {
+interface Token {
+	acr: string,
+	exp: number
+}
+
+export const verifyJwtToken = (token: string | undefined, keyRetriever: GetPublicKeyOrSecret, verifyOptions: VerifyOptions): Promise<Token> => {
 	return new Promise((resolve, reject) => {
 		if (!token) {
 			reject('Token is missing');
 			return;
 		}
 
-		verify(token, keyRetriever, verifyOptions, function(err) {
+		verify(token, keyRetriever, verifyOptions, function(err, decoded) {
 			if (err) {
 				reject(err);
 			} else {
-				resolve();
+				resolve(decoded as Token);
 			}
 		});
 	});

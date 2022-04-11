@@ -33,6 +33,7 @@ export interface AppConfig {
 	tokenCookieName?: string;
 	proxies?: ProxyConfig[];
 	redirects?: RedirectConfig[];
+	loginLevel: number;
 }
 
 export function createAppConfig(): AppConfig {
@@ -72,7 +73,8 @@ export function createAppConfig(): AppConfig {
 		oidcClientId: jsonConfig?.oidcClientId || environmentConfig.oidcClientId,
 		tokenCookieName: jsonConfig?.tokenCookieName || environmentConfig.tokenCookieName,
 		proxies: jsonConfig?.proxies,
-		redirects: jsonConfig?.redirects
+		redirects: jsonConfig?.redirects,
+		loginLevel: jsonConfig?.minLoginLevel || 4
 	};
 }
 

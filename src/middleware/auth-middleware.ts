@@ -15,12 +15,16 @@ export interface AuthMiddlewareConfig {
 	oidcClientId: string;
 	loginRedirectUrl: string;
 	tokenCookieName: string;
+	loginLevel: number;
 }
 
 const RETURN_TO = '{RETURN_TO_URL}';
 
-function createLoginRedirectUrl(returnToUrl: string, loginRedirectUrl: string): string {
-	return loginRedirectUrl.replace(RETURN_TO, encodeURIComponent(returnToUrl))
+function createLoginRedirectUrl(returnToUrl: string, loginRedirectUrl: string, minLoginLevel: number): string {
+	let lenke = loginRedirectUrl.replace(RETURN_TO, encodeURIComponent(returnToUrl));
+	let url = new URL(lenke);
+	url.searchParams.set('level', 'Level'+ minLoginLevel);
+	return url.toString()
 }
 
 export function createAuthConfig(config: AppConfig): AuthMiddlewareConfig {
@@ -44,8 +48,13 @@ export function createAuthConfig(config: AppConfig): AuthMiddlewareConfig {
 		oidcClientId: config.oidcClientId,
 		oidcDiscoveryUrl: config.oidcDiscoveryUrl,
 		loginRedirectUrl: config.loginRedirectUrl,
-		tokenCookieName: config.tokenCookieName
+		tokenCookieName: config.tokenCookieName,
+		loginLevel: config.loginLevel
 	};
+}
+
+function hasMinLevel(acr: string, level: number) {
+	return acr.endsWith('4') || level === 3 && acr.endsWith('3');
 }
 
 export const authenticationWithLoginRedirect = async (config: AuthMiddlewareConfig) => {
@@ -53,7 +62,7 @@ export const authenticationWithLoginRedirect = async (config: AuthMiddlewareConf
 	const jwksClient = createJwksClient(discoveryData.jwks_uri);
 	const verifyOptions = createVerifyOptions(config.oidcClientId, discoveryData.issuer);
 	const keyRetriever = createKeyRetriever(jwksClient);
-	const redirectToLogin = (req: Request, res: Response) => res.redirect(createLoginRedirectUrl(getFullUrl(req), config.loginRedirectUrl));
+	const redirectToLogin = (req: Request, res: Response) => res.redirect(createLoginRedirectUrl(getFullUrl(req), config.loginRedirectUrl, config.loginLevel));
 
 	return (req: Request, res: Response, next: NextFunction) => {
 		const token = getCookieValue(req, config.tokenCookieName);
@@ -62,7 +71,13 @@ export const authenticationWithLoginRedirect = async (config: AuthMiddlewareConf
 			redirectToLogin(req, res);
 		} else {
 			verifyJwtToken(token, keyRetriever, verifyOptions)
-				.then(() => next())
+				.then(decodeed => {
+					if(!hasMinLevel(decodeed.acr, config.loginLevel)) {
+						redirectToLogin(req, res)
+					} else {
+						next();
+					}
+				})
 				.catch(() => redirectToLogin(req, res));
 		}
 

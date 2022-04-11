@@ -133,6 +133,9 @@ En klient id som brukes for å verifisere at tokenet kan brukes i appen din.
 Navnet på cookien som inneholder tokenet til bruker.
 
 
+### MinLoginLevel
+minimums innlogings nivå (3 eller 4) deafult 4.
+
 ### Proxy
 Setter opp en HTTP proxy fra pto-frontend til en gitt URL. 
 Kan f.eks brukes for å slippe unna CORS mot eksterne tjenester eller for å nå tjenester som man ikke kan nå fra browseren.
