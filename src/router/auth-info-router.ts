@@ -5,7 +5,6 @@ import {
 	createVerifyOptions, getCookieValue,
 	getJwksUrlFromDiscoveryEndpoint, verifyJwtToken
 } from '../utils/auth-utils';
-import { fromBase64 } from '../utils/utils';
 
 interface AuthInfoResponse {
 	loggedIn: boolean,
@@ -34,8 +33,7 @@ export async function authInfoRouter(config: { oidcClientId: string, oidcDiscove
 			res.send(authInfoNotAuthenticated);
 		} else {
 			verifyJwtToken(token, keyRetriever, verifyOptions)
-				.then(() => {
-					const payload = JSON.parse(fromBase64(token.split('.')[1]));
+				.then(payload => {
 					const epochSec = Math.ceil(new Date().getTime() / 1000);
 					const expirationTime = new Date(payload.exp * 1000).toISOString()
 
