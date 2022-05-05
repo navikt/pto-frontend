@@ -109,11 +109,11 @@ export class Environment {
 	}
 
 	get oidcDiscoveryUrl(): string | undefined {
-		return process.env.OIDC_DISCOVERY_URL;
+		return process.env.LOGINSERVICE_IDPORTEN_DISCOVERY_URL;
 	}
 
 	get oidcClientId(): string | undefined {
-		return process.env.OIDC_CLIENT_ID;
+		return process.env.LOGINSERVICE_IDPORTEN_AUDIENCE
 	}
 
 	get tokenCookieName(): string | undefined {
