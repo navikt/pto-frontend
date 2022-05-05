@@ -123,11 +123,13 @@ Denne URLen burde inneholde **{RETURN_TO_URL}** som vil bli byttet ut med URLen 
 
 Eksempel: LOGIN_REDIRECT_URL=https://loginservice.dev.nav.no/login?redirect={RETURN_TO_URL}&level=Level4`
 
-#### OIDC_DISCOVERY_URL
+#### LOGINSERVICE_IDPORTEN_DISCOVERY_URL
 URL som peker til discovery endepunktet for en OIDC provider. Brukes for å hente JWKS URI og issuer.
+Det anbefales å hente denne miljøvariabelen fra configmap loginservice-idporten.
 
-#### OIDC_CLIENT_ID
-En klient id som brukes for å verifisere at tokenet kan brukes i appen din.
+#### LOGINSERVICE_IDPORTEN_AUDIENCE
+En audience id som brukes for å verifisere mot issuer at tokenet kan brukes i appen din.
+Det anbefales å hente denne miljøvariabelen fra configmap loginservice-idporten.
 
 #### TOKEN_COOKIE_NAME
 Navnet på cookien som inneholder tokenet til bruker.
