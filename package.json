@@ -29,7 +29,7 @@
     "helmet": "^4.6.0",
     "http-proxy-middleware": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
-    "jwks-rsa": "^2.0.3",
+    "jwks-rsa": "^2.1.5",
     "mime-types": "^2.1.31",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.7",
