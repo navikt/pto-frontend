@@ -7,6 +7,7 @@ const ACCOUNT_PSPLUGIN_DOMAIN = "account.psplugin.com";
 const NAV_PSPLUGIN_DOMAIN = "nav.psplugin.com";
 const HOTJAR_DOMAIN = "*.hotjar.com";
 const VARS_HOTJAR_DOMAIN = "vars.hotjar.com";
+const VIDEO_QBRICK_DOMAIN = "video.qbrick.com";
 
 /**
  * Det hadde vært best å fjerne 'unsafe-inline' fra scriptSrc, men NAV dekoratøren kjører inline scripts som ikke vil fungere uten dette.
@@ -26,7 +27,7 @@ export function helmetMiddleware() {
 				blockAllMixedContent: [],
 				fontSrc: ["'self'", "https:", "data:"].concat(ALLOWED_DOMAINS),
 				frameAncestors: ["'self'"],
-				frameSrc: [VARS_HOTJAR_DOMAIN],
+				frameSrc: [VARS_HOTJAR_DOMAIN, VIDEO_QBRICK_DOMAIN],
 				objectSrc: ["'none'"],
 				scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"].concat(
 					ALLOWED_DOMAINS, GOOGLE_ANALYTICS_DOMAIN,
