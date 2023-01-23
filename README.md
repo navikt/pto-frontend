@@ -1,4 +1,7 @@
 # pto-frontend
+
+DEPRECATED. Erstattet av https://github.com/navikt/poao-frontend.
+
 Node.js Express app som håndterer diverse funksjoner som er påkrevd av de fleste frontend applikasjoner.
 
 ## Hvordan ta i bruk
